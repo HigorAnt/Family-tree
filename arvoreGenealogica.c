@@ -30,38 +30,24 @@ Familiar lerFamiliar(){
     return f;
 }
 
-void inserirIrmao() {
-    buscarIrmao();
-
-    Irmao *i = (Irmao*)malloc(sizeof(Irmao));
-    printf("Qual o nome do irmão? ");
+Irmao lerIrmao(No *raiz) {
+    Irmao i;
+    printf("Digite o nome da pessoa: ");
     fgets(i.nome, 49, stdin);
-    printf("Qual o sexo da pessoa? ");
+    printf("Digite a idade: ");
     scanf("%d", &i.idade);
     return i;
-
-    if(fila==NULL) {
-        fila = p;
-    } else {
-        Pessoa *filaAux = fila;
-        while(filaAux->prox!=NULL) {
-            filaAux = filaAux->prox;
-        }
-        filaAux->prox = p;
-    }
 }
 
-Irmao* buscarIrmao(No *raiz, nome[]) {
+No* buscarMembro(No *raiz, char nome[]){
     if(raiz==NULL){
         return NULL;
     }
     if(strcmp(nome,raiz->familiar.nome)==0) {
         return raiz;
     }else{
-        raiz = raiz->pai;
-        buscarPai(raiz, nome);
-        raiz = raiz->mae;
-        buscarMae(raiz,nome);
+        buscarMembro(raiz->mae,nome);
+        buscarMembro(raiz->pai,nome);
     }
 }
 
@@ -74,7 +60,7 @@ void inserirFamiliar(No **raiz, Familiar f){
     char parente = 'M';
     while(aux){
         scanf("%c", &parente);
-        if(parente == aux->familiar.sexo)
+        if(parente==aux->familiar.sexo)
             raiz = &aux->pai;
         else
             raiz = &aux->mae;
@@ -105,30 +91,6 @@ void inserirMae(No *filho, Familiar f){
     aux->mae = mae;
 }
 
-No* buscarPai(No *raiz, char nome[]){
-    if(raiz==NULL){
-        return NULL;
-    }
-    if(strcmp(nome,raiz->familiar.nome)==0) {
-        return raiz;
-    }else{
-        raiz = raiz->pai;
-        buscarPai(raiz, nome);
-    }
-}
-
-No* buscarMae(No *raiz, char nome[]){
-    if(raiz==NULL){
-        return NULL;
-    }
-    if(strcmp(nome,raiz->familiar.nome)==0) {
-        return raiz;
-    }else{
-        raiz = raiz->mae;
-        buscarPai(raiz, nome);
-    }
-}
-
 int geracoes(No *raiz){
     if(raiz == NULL){
         return -1;
@@ -137,9 +99,9 @@ int geracoes(No *raiz){
         int esq = geracoes(raiz->pai);
         int dir = geracoes(raiz->mae);
         if(esq>dir)
-            return esq + 1;
+            return esq+1;
         else
-            return dir + 1;
+            return dir+1;
     }
 }
 
@@ -168,7 +130,7 @@ No* removerFamiliar(No *raiz, char nome[]) {
         }
 }
 
-void imprimirFamiliarRecursivo(No *raiz){ // 50 25 30 100
+void imprimirFamiliarRecursivo(No *raiz){
     if(raiz){
         imprimirFamiliar(raiz->familiar);
         imprimirFamiliarRecursivo(raiz->pai);
@@ -182,7 +144,7 @@ void menu(No *busca, No *raiz) {
     char nome[50];
 
     do{
-        printf("\n0 - Sair\n1 - Iniciar Arvore\n2 - Imprimir\n3 - Buscar\n4 - Quantidade de gerações\n5 - Tamanho\n6 - Folhas\n7 - Remover\n8 - Inserir Pai\n9 - Inserir Mae\n");
+        printf("\n0- Sair\n1- Iniciar Arvore\n2- Imprimir\n3- Buscar\n4- Quantidade de gerações\n5- Tamanho\n6- Folhas\n7- Remover\n8- Inserir Genitores\n\n");
         scanf("%d", &opcao);
         getchar();
 
@@ -195,17 +157,12 @@ void menu(No *busca, No *raiz) {
                 printf("\n");
                 break;
             case 3:
-                printf("\nDigite o sexo da Pessoa: ");
-                scanf("%c", &sexo);
-                getchar();
                 printf("\nDigite o nome a ser procurado: ");
                 fgets(nome,49,stdin);
-                if(sexo=='M' || sexo=='m'){
-                    busca = buscarPai(raiz,nome);
-                }else if(sexo=='F' || sexo=='f'){
-                    busca = buscarMae(raiz,nome);
-                }else{
-                    busca=NULL;
+                if(sexo!='M' || sexo!='m' || sexo!='F' || sexo!='f'){
+                    printf("Valor inválido");
+                }else {
+                    buscarMembro(raiz,nome);
                 }
                 if(busca){
                     imprimirFamiliar(busca->familiar);
@@ -229,57 +186,9 @@ void menu(No *busca, No *raiz) {
                 getchar();
                 printf("\nDigite o nome da Pessoa: ");
                 fgets(nome,49,stdin);
-                if(sexo=='M'){
-                    busca = buscarPai(raiz,nome);
-                } else if(sexo=='F') {
-                    busca = buscarMae(raiz, nome);
-                } else {
-                    busca=NULL;
-                }
+                busca = buscarMembro(raiz,nome);
                 if(busca){
                     removerFamiliar(raiz,nome);
-                }
-                break;
-            case 8:
-                printf("\nDigite o sexo do filho: ");
-                scanf("%c", &sexo);
-                getchar();
-                printf("\nDigite o nome do filho: ");
-                fgets(nome,49,stdin);
-                if(sexo=='M'){
-                    busca = buscarPai(raiz,nome);
-                }else if(sexo=='F'){
-                    busca = buscarMae(raiz, nome);
-                }else{
-                    busca=NULL;
-                }
-                if(busca){
-                    printf("\n\tValor encontrado:\n");
-                    inserirPai(busca, lerFAmiliar());
-                }
-                else {
-                    printf("\nValor nao encontrado!\n");
-                }
-                break;
-            case 9:
-                printf("\nDigite o sexo do filho: ");
-                scanf("%c", &sexo);
-                getchar();
-                printf("\nDigite o nome do filho: ");
-                fgets(nome,49,stdin);
-                if(sexo=='M'){
-                    busca = buscarPai(raiz,nome);
-                }else if(sexo=='F'){
-                    busca = buscarMae(raiz, nome);
-                }else{
-                    busca=NULL;
-                }
-                if(busca){
-                    printf("\n\tValor encontrado:\n");
-                    inserirMae(busca, lerFAmiliar());
-                }
-                else {
-                    printf("\nValor nao encontrado!\n");
                 }
                 break;
             default:
