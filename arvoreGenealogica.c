@@ -40,7 +40,15 @@ Irmao lerIrmao(No *raiz) {
 }
 
 No* buscarMembro(No *raiz, char nome[]){
-    if(raiz==NULL){
+    if(raiz) {
+        if(strcmp(nome,raiz->familiar.nome)==0) {
+            return raiz;
+        } else {
+            buscarMembro(raiz->pai,nome);
+            buscarMembro(raiz->mae,nome);
+        }
+    }
+    /*if(raiz==NULL){
         return NULL;
     }
     if(strcmp(nome,raiz->familiar.nome)==0) {
@@ -48,7 +56,7 @@ No* buscarMembro(No *raiz, char nome[]){
     }else{
         buscarMembro(raiz->mae,nome);
         buscarMembro(raiz->pai,nome);
-    }
+    }*/
 }
 
 void imprimirFamiliar(Familiar f){
@@ -169,11 +177,7 @@ void menu(No *busca, No *raiz) {
             case 3:
                 printf("\nDigite o nome a ser procurado: ");
                 fgets(nome,49,stdin);
-                if(sexo!='M' || sexo!='m' || sexo!='F' || sexo!='f'){
-                    printf("Valor inválido");
-                }else {
-                    buscarMembro(raiz,nome);
-                }
+                busca = buscarMembro(raiz,nome);
                 if(busca){
                     imprimirFamiliar(busca->familiar);
                 }
