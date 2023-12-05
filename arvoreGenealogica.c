@@ -11,7 +11,7 @@ typedef struct{
 typedef struct irmao {
     char nome[50];
     int idade;
-    struct irmao *fila;
+    struct irmao *fila, *prox;
 } Irmao;
 
 typedef struct no{
@@ -19,11 +19,7 @@ typedef struct no{
     struct no *pai, *mae;
 }No;
 
-typedef struct fila{
-    No *inicio, *atual, *proximo;
-}Fila;
-
-Familiar lerFAmiliar(){
+Familiar lerFamiliar(){
     Familiar f;
     printf("Digite o nome da pessoa: ");
     fgets(f.nome, 49, stdin);
@@ -34,13 +30,39 @@ Familiar lerFAmiliar(){
     return f;
 }
 
-Irmao lerIrmao() {
-    Irmao i;
+void inserirIrmao() {
+    buscarIrmao();
+
+    Irmao *i = (Irmao*)malloc(sizeof(Irmao));
     printf("Qual o nome do irmão? ");
     fgets(i.nome, 49, stdin);
     printf("Qual o sexo da pessoa? ");
     scanf("%d", &i.idade);
     return i;
+
+    if(fila==NULL) {
+        fila = p;
+    } else {
+        Pessoa *filaAux = fila;
+        while(filaAux->prox!=NULL) {
+            filaAux = filaAux->prox;
+        }
+        filaAux->prox = p;
+    }
+}
+
+Irmao* buscarIrmao(No *raiz, nome[]) {
+    if(raiz==NULL){
+        return NULL;
+    }
+    if(strcmp(nome,raiz->familiar.nome)==0) {
+        return raiz;
+    }else{
+        raiz = raiz->pai;
+        buscarPai(raiz, nome);
+        raiz = raiz->mae;
+        buscarMae(raiz,nome);
+    }
 }
 
 void imprimirFamiliar(Familiar f){
@@ -166,7 +188,7 @@ void menu(No *busca, No *raiz) {
 
         switch(opcao){
             case 1:
-                inserirFamiliar(&raiz,lerFAmiliar());
+                inserirFamiliar(&raiz,lerFamiliar());
                 break;
             case 2:
                 imprimirFamiliarRecursivo(raiz);
