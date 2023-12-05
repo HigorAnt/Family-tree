@@ -73,22 +73,24 @@ void inserirFamiliar(No **raiz, Familiar f){
     *raiz = aux;
 }
 
-void inserirPai(No *filho, Familiar f){
+void inserirGenitores(No *filho, Familiar f) {
     No *aux = filho;
-    No *pai = malloc(sizeof(No));
-    pai->familiar = f;
-    pai->pai = NULL;
-    pai->mae = NULL;
-    aux->pai = pai;
-}
-
-void inserirMae(No *filho, Familiar f){
-    No *aux = filho;
-    No *mae = malloc(sizeof(No));
-    mae->familiar = f;
-    mae->pai = NULL;
-    mae->mae = NULL;
-    aux->mae = mae;
+    char genitor = 'P';
+    printf("Qual genitor deseja inserir? ");
+    scanf("%c", &genitor);
+    if(genitor=='P' || genitor=='p') {
+        No *pai = malloc(sizeof(No));
+        pai->familiar = f;
+        pai->pai = NULL;
+        pai->mae = NULL;
+        aux->pai = pai;
+    } else {
+        No *mae = malloc(sizeof(No));
+        mae->familiar = f;
+        mae->pai = NULL;
+        mae->mae = NULL;
+        aux->mae = mae;
+    }
 }
 
 int geracoes(No *raiz){
@@ -140,7 +142,7 @@ void imprimirFamiliarRecursivo(No *raiz){
 
 void menu(No *busca, No *raiz) {
     int opcao, valor;
-    char sexo;
+    char sexo, resposta;;
     char nome[50];
 
     do{
@@ -151,6 +153,14 @@ void menu(No *busca, No *raiz) {
         switch(opcao){
             case 1:
                 inserirFamiliar(&raiz,lerFamiliar());
+                printf("Deseja inserir genitores do mesmo? ");
+                getchar();
+                scanf("%c", &resposta);
+                if(resposta=='S' || resposta=='s') {
+                    getchar();
+                    inserirFamiliar(&raiz,lerFamiliar());
+                    //inserirGenitores(raiz,lerFamiliar());
+                }
                 break;
             case 2:
                 imprimirFamiliarRecursivo(raiz);
