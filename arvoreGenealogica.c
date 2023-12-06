@@ -30,15 +30,6 @@ Familiar lerFamiliar(){
     return f;
 }
 
-Irmao lerIrmao(No *raiz) {
-    Irmao i;
-    printf("Digite o nome da pessoa: ");
-    fgets(i.nome, 49, stdin);
-    printf("Digite a idade: ");
-    scanf("%d", &i.idade);
-    return i;
-}
-
 No* buscarMembro(No *raiz, char nome[]){
     if(raiz) {
         if(strcmp(nome,raiz->familiar.nome)==0) {
@@ -48,15 +39,6 @@ No* buscarMembro(No *raiz, char nome[]){
             buscarMembro(raiz->mae,nome);
         }
     }
-    /*if(raiz==NULL){
-        return NULL;
-    }
-    if(strcmp(nome,raiz->familiar.nome)==0) {
-        return raiz;
-    }else{
-        buscarMembro(raiz->mae,nome);
-        buscarMembro(raiz->pai,nome);
-    }*/
 }
 
 void imprimirFamiliar(Familiar f){
@@ -101,6 +83,24 @@ void inserirGenitores(No *filho, Familiar f) {
     }
 }
 
+Irmao lerIrmao() {
+    Irmao i;
+    printf("Digite o nome da pessoa: ");
+    fgets(i.nome, 49, stdin);
+    printf("Digite a idade: ");
+    scanf("%d", &i.idade);
+    return i;
+}
+
+void inserirIrmao(Familiar *f, Irmao *irmaoAux) {
+    if(irmaoAux==NULL) {
+        return;
+    } else {
+        i->fila = irmaoAux;
+        i->prox = NULL;
+    }
+}
+
 int geracoes(No *raiz){
     if(raiz == NULL){
         return -1;
@@ -119,7 +119,7 @@ int quantidadeNos(No *raiz){
     if(raiz==NULL) {
         return 0;
     } else {
-        return 1 + quantidadeNos(raiz->pai) + quantidadeNos(raiz->mae);
+        return 1+quantidadeNos(raiz->pai)+quantidadeNos(raiz->mae);
     }
 }
 
@@ -148,13 +148,13 @@ void imprimirFamiliarRecursivo(No *raiz){
     }
 }
 
-void menu(No *busca, No *raiz) {
+void menu(No *busca, No *raiz, Irmao *irmaoAux) {
     int opcao, valor;
-    char sexo, resposta;;
+    char sexo, resposta, irmao;
     char nome[50];
 
     do{
-        printf("\n0- Sair\n1- Iniciar Arvore\n2- Imprimir\n3- Buscar\n4- Quantidade de gerações\n5- Tamanho\n6- Folhas\n7- Remover\n8- Inserir Genitores\n\n");
+        printf("\n0- Sair\n1- Iniciar Arvore\n2- Imprimir\n3- Buscar\n4- Quantidade de gerações\n5- Tamanho\n6- Folhas\n7- Remover\n8- Inserir irmãos\n");
         scanf("%d", &opcao);
         getchar();
 
@@ -205,6 +205,13 @@ void menu(No *busca, No *raiz) {
                     removerFamiliar(raiz,nome);
                 }
                 break;
+            case 8:
+                do {
+
+                    inserirIrmao(raiz,irmaoAux);
+                    printf("Deseja inserir mais algum irmão ao membro da família? ");
+                    scanf("%c", &irmao);
+                } while(irmao!='N' || irmao!='n');
             default:
                 if(opcao != 0) {
                     printf("Opção inválida");
@@ -216,8 +223,9 @@ void menu(No *busca, No *raiz) {
 int main(){
 
     No *busca, *raiz = NULL;
+    Irmao *irmaoAux = NULL;
 
-    menu(busca,raiz);
+    menu(busca,raiz,irmaoAux);
 
     return 0;
 }
