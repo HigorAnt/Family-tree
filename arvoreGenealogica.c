@@ -92,11 +92,12 @@ Irmao lerIrmao() {
     return i;
 }
 
-void inserirIrmao(Familiar *f, Irmao *irmaoAux) {
+void inserirIrmao(Familiar *f) {
+    Irmao *irmaoAux = f;
     if(irmaoAux==NULL) {
         return;
     } else {
-        i->fila = irmaoAux;
+        ->fila = irmaoAux;
         i->prox = NULL;
     }
 }
